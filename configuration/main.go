@@ -16,14 +16,15 @@ type RepoSourceConfiguration struct {
 	Type                  string `json:"type"`
 	Url                   string `json:"url"`
 	ApiKey                string `json:"api-key"`
+	User                  string `json:"user"`
 	DestinationOwner      string `json:"dest-owner"`
 	DestinationNamePrefix string `json:"dest-name-prefix"`
 }
 
 type RepoDestinationConfiguration struct {
-	Url                string `json:"url"`
-	ApiKey             string `json:"api-key"`
-	DBConnectionString string `json:"db-connection-string"`
+	Url      string `json:"url"`
+	ApiKey   string `json:"api-key"`
+	DataPath string `json:"data-path"`
 }
 
 func Read() (*Configuration, error) {

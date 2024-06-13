@@ -1,0 +1,23 @@
+{
+  "verbose": true,
+  "sources": [
+    {
+      "type": "gitlab",
+      "url": "https://gitlab.com",
+      "user": "******",
+      "api-key": "******",
+      "dest-owner": "import-gitlab"
+    }, {
+      "type": "github",
+      "url": "https://github.com",
+      "user": "******",
+      "api-key": "******",
+      "dest-owner": "import-github"
+    }
+  ],
+  "destination": {
+    "url": "https://gilea.local",
+    "api-key": "******",
+    "data-path": "/opt/gitea/data"
+  }
+}
