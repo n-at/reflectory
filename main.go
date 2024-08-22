@@ -1,11 +1,12 @@
 package main
 
 import (
-	log "github.com/sirupsen/logrus"
 	"os"
 	"reflectory/configuration"
 	"reflectory/destination"
 	"reflectory/source"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -67,6 +68,10 @@ func main() {
 	if len(repositories) == 0 {
 		log.Fatalf("no repositories found")
 	}
+
+	// for _, r := range repositories {
+	// 	log.Debugf("%v", r)
+	// }
 
 	g, err := destination.New(config.Destination)
 	if err != nil {
