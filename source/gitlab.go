@@ -75,14 +75,13 @@ func (g *GitLab) getProjects(page int) ([]project, error) {
 
 	defer response.Body.Close()
 
-	responseBody, err := io.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
 
 	var projects []project
-
-	if err := json.Unmarshal(responseBody, &projects); err != nil {
+	if err := json.Unmarshal(body, &projects); err != nil {
 		return nil, err
 	}
 

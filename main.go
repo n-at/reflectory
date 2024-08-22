@@ -43,7 +43,6 @@ func main() {
 			sourceRepositories, err = g.Export()
 			if err != nil {
 				log.Errorf("unable to export GitHub repositories: %s", err)
-				break
 			}
 
 		case "gitlab":
@@ -55,7 +54,6 @@ func main() {
 			sourceRepositories, err = g.Export()
 			if err != nil {
 				log.Errorf("unable to export GitLab repositories: %s", err)
-				break
 			}
 
 		default:
