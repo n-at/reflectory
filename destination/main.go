@@ -7,8 +7,13 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"os"
+	"path"
 	"reflectory/configuration"
 	"reflectory/source"
+	"regexp"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -36,14 +41,18 @@ func (g *Gitea) Mirror(repo source.Repository) error {
 	if exists {
 		log.Infof("repo %s/%s exists, syncing", repo.DestinationOwner, repo.DestinationName)
 
-		//TODO update url
-		log.Debugf("TODO update repo url")
-
+		updated, err := g.mirrorUpdate(repo)
+		if err != nil {
+			return err
+		}
+		if !updated {
+			return nil
+		}
 		if err := g.mirrorSync(repo); err != nil {
 			return err
 		}
 	} else {
-		log.Infof("repo %s/%s not exist, migrating", repo.DestinationOwner, repo.DestinationName)
+		log.Infof("repo %s/%s not exists, migrating", repo.DestinationOwner, repo.DestinationName)
 
 		if err := g.migrate(repo); err != nil {
 			return err
@@ -152,4 +161,40 @@ func (g *Gitea) mirrorSync(repo source.Repository) error {
 	defer response.Body.Close()
 
 	return nil
+}
+
+func (g *Gitea) mirrorUpdate(repo source.Repository) (bool, error) {
+	configPath := path.Join(g.config.DataPath, "git", "repositories", repo.DestinationOwner, repo.DestinationName+".git", "config")
+	contentsBytes, err := os.ReadFile(configPath)
+	if err != nil {
+		return false, err
+	}
+
+	contents := string(contentsBytes)
+
+	re := regexp.MustCompile(`\[remote "origin"\][.\s]*url\s*=\s*(.*)\n`)
+	matches := re.FindStringSubmatch(contents)
+	if matches == nil || len(matches) < 2 {
+		return false, errors.New("origin url not found")
+	}
+	originUrl := matches[1]
+
+	u, err := url.Parse(originUrl)
+	if err != nil {
+		return false, err
+	}
+	u.User = url.UserPassword(repo.CloneUsername, repo.ClonePassword)
+	newOriginUrl := u.String()
+
+	if originUrl == newOriginUrl {
+		return false, nil
+	}
+
+	contents = strings.Replace(contents, originUrl, newOriginUrl, 1)
+
+	if err := os.WriteFile(configPath, []byte(contents), 0o666); err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
