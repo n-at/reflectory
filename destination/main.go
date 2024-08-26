@@ -164,7 +164,7 @@ func (g *Gitea) mirrorSync(repo source.Repository) error {
 }
 
 func (g *Gitea) mirrorUpdate(repo source.Repository) (bool, error) {
-	configPath := path.Join(g.config.DataPath, "git", "repositories", repo.DestinationOwner, repo.DestinationName+".git", "config")
+	configPath := path.Join(g.config.DataPath, "git", "repositories", strings.ToLower(repo.DestinationOwner), strings.ToLower(repo.DestinationName+".git"), "config")
 	contentsBytes, err := os.ReadFile(configPath)
 	if err != nil {
 		return false, err
