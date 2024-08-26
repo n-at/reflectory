@@ -67,16 +67,14 @@ func main() {
 		log.Fatalf("no repositories found")
 	}
 
-	// for _, r := range repositories {
-	// 	log.Debugf("%v", r)
-	// }
-
 	g, err := destination.New(config.Destination)
 	if err != nil {
 		log.Fatalf("unable to init Gitea destination: %s", err)
 	}
-	if err := g.Mirror(repositories); err != nil {
-		log.Fatalf("unable to mirror repositories: %s", err)
+	for _, repo := range repositories {
+		if err := g.Mirror(repo); err != nil {
+			log.Errorf("unable to mirror repository %s/%s: %s", repo.DestinationOwner, repo.DestinationName, err)
+		}
 	}
 
 	log.Infof("DONE")

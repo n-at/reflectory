@@ -53,6 +53,7 @@ func (g *GitLab) Export() ([]Repository, error) {
 				CloneUrl:         project.Url,
 				CloneUsername:    g.config.User,
 				ClonePassword:    g.config.ApiKey,
+				CloneService:     "gitlab",
 				DestinationOwner: g.config.DestinationOwner,
 				DestinationName:  project.Name,
 			})

@@ -54,6 +54,7 @@ func (g *GitHub) Export() ([]Repository, error) {
 				CloneUrl:         r.Url,
 				CloneUsername:    g.config.User,
 				ClonePassword:    g.config.ApiKey,
+				CloneService:     "github",
 				DestinationOwner: g.config.DestinationOwner,
 				DestinationName:  r.Name,
 			})

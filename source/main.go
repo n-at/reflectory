@@ -5,6 +5,7 @@ type Repository struct {
 	CloneUrl         string
 	CloneUsername    string
 	ClonePassword    string
+	CloneService     string
 	DestinationOwner string
 	DestinationName  string
 }
